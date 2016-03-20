@@ -22,7 +22,7 @@ import org.netbeans.microedition.lcdui.custom.RepRapScreen;
  *
  * @author vlada
  */
-public class RepRapClientEngine implements RepRapListener, PropertyChangeListener, CommandListener {
+public class RepRapClientEngine implements RepRapListener, PropertyChangeListener, CommandListener, Runnable {
     
     private MIDlet parent;
     private List filesOnSDcardList;
@@ -33,6 +33,7 @@ public class RepRapClientEngine implements RepRapListener, PropertyChangeListene
     private boolean expectSDfilelist = false;
     private boolean haveSDfilelist = false;
     private boolean extruderTemperature;
+    private String cmd = "";
 
     public RepRapClientEngine() {
         temperatureTextBox = new TextBox("Temperature", null, 3, TextField.NUMERIC);                                      
@@ -94,6 +95,35 @@ public class RepRapClientEngine implements RepRapListener, PropertyChangeListene
         if (propertyName.compareTo("character read") == 0) {
             //System.out.println("char received: " + (char) newValue);
             //consoleScreen.writeChar((char) newValue);
+            
+            char c = (char) newValue;
+            if ((c=='\n' || c=='\r') && cmd.length() > 0) {
+                int Tpos = cmd.indexOf("T:");
+                int Bpos = cmd.indexOf("B:");
+                //System.out.println("Tpos = " + Tpos + "; Bpos = " + Bpos);
+                if (Tpos > 0 && Bpos >0) {
+                    int TposEnd = cmd.indexOf(" ",Tpos+2);
+                    if (TposEnd < 0) {
+                        TposEnd = cmd.length();
+                    }
+                    int BposEnd = cmd.indexOf(" ",Bpos+2);
+                    if (BposEnd < 0) {
+                        BposEnd = cmd.length();
+                    }
+                    int Ttemp = (int) Double.parseDouble(cmd.substring(Tpos+2, TposEnd));
+                    int Btemp = (int) Double.parseDouble(cmd.substring(Bpos+2, BposEnd));
+                    
+                    if (repRapScreen!= null) {
+                        repRapScreen.addTemp(new int[] {Ttemp}, new int[] {Btemp});                        
+                    }
+                }
+                
+                
+                cmd = "";
+            } else {
+                cmd += c;
+            }
+            
             if (expectSDfilelist) {
                 
             }
@@ -147,5 +177,17 @@ public class RepRapClientEngine implements RepRapListener, PropertyChangeListene
             }
         }
         Display.getDisplay(parent).setCurrent(repRapScreen);
+    }
+
+    public void run() {
+        while (true) {
+            try {
+                sendCommand("M105"+"\r\n");
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+                break;
+            }
+        }
     }
 }

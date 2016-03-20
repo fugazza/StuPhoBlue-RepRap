@@ -110,7 +110,9 @@ public class BTSerialPort implements Runnable {
     }
 
     public void write(String s) throws IOException {
-        ow.write(s);
+        if (ow != null) {
+            ow.write(s);
+        }
     }
     
     public void addPropertyListener(PropertyChangeListener listener) {

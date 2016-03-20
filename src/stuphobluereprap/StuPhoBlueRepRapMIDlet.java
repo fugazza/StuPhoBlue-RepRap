@@ -100,12 +100,15 @@ public final class StuPhoBlueRepRapMIDlet extends MIDlet implements CommandListe
 //GEN-LINE:|0-initialize|1|0-postInitialize
         // write post-initialize user code here
         bluetoothSerialPort.addPropertyListener(this);
+        bluetoothSerialPort.addPropertyListener(repRapEngine);
         repRapEngine.setConsoleScreen(getConsoleScreen());
         repRapEngine.setFilesOnSDcardList(getFilesOnSDcardList());
         repRapEngine.setParent(this);
         repRapEngine.setSerialPort(bluetoothSerialPort);
         repRapEngine.setRepRapScreen(getRepRapScreen());
-        repRapScreen.addRepRapListener(repRapEngine);
+        RepRapScreen rrsc = getRepRapScreen();
+        rrsc.addRepRapListener(repRapEngine);
+        (new Thread(repRapEngine)).start();
     }//GEN-BEGIN:|0-initialize|2|
 //</editor-fold>//GEN-END:|0-initialize|2|
 
