@@ -63,9 +63,9 @@ public class RepRapClientEngine implements RepRapListener, PropertyChangeListene
     public void repRapMoveZ(byte direction) {
         sendCommand("G91"+"\r\n");
         if (direction>0) {
-            sendCommand("G1 Z1 F30"+"\r\n");
+            sendCommand("G1 Z1 F60"+"\r\n");
         } else {
-            sendCommand("G1 Z-1 F30"+"\r\n");
+            sendCommand("G1 Z-1 F60"+"\r\n");
         }
     }
 
@@ -76,18 +76,21 @@ public class RepRapClientEngine implements RepRapListener, PropertyChangeListene
     public void repRapSetExtruderTemperature() {
         extruderTemperature = true;
         temperatureTextBox.setTitle("Extruder temp");
+        temperatureTextBox.setString("");
         Display.getDisplay(parent).setCurrent(temperatureTextBox);
     }
 
     public void repRapSetBedTemperature() {
         extruderTemperature = false;
         temperatureTextBox.setTitle("Bed temp");
+        temperatureTextBox.setString("");
         Display.getDisplay(parent).setCurrent(temperatureTextBox);
     }
 
     public void repRapReadSDcard() {
         sendCommand("M20"+"\r\n");
         expectSDfilelist = true;
+        filesOnSDcardList.deleteAll();
     }
 
     public void propertyChange(String propertyName, int oldValue, int newValue) {
@@ -118,18 +121,24 @@ public class RepRapClientEngine implements RepRapListener, PropertyChangeListene
                     }
                 }
                 
+                if (expectSDfilelist) {
+                    if (cmd.startsWith("ok")) {
+                        haveSDfilelist = true;
+                        expectSDfilelist = false;
+                    } else if (!cmd.startsWith("Begin file list") && !cmd.startsWith("End file list")) {
+                        filesOnSDcardList.append(cmd, null);
+                    }
+                }
+                if (haveSDfilelist) {
+                    Display.getDisplay(parent).setCurrent(filesOnSDcardList);
+                    haveSDfilelist = false;
+                }
                 
                 cmd = "";
             } else {
                 cmd += c;
             }
             
-            if (expectSDfilelist) {
-                
-            }
-            if (haveSDfilelist) {
-                Display.getDisplay(parent).setCurrent(filesOnSDcardList);
-            }
         } else if (propertyName.compareTo("disconnected") == 0) {
             //disconnectMethod();
         }
@@ -171,9 +180,13 @@ public class RepRapClientEngine implements RepRapListener, PropertyChangeListene
     public void commandAction(Command c, Displayable d) {
         if (c.getCommandType() == Command.OK) {
             if (extruderTemperature) {
-                sendCommand("M104 S"+ temperatureTextBox.getString() +"\r\n");
+                int extTemp = Integer.parseInt(temperatureTextBox.getString());
+                sendCommand("M104 S"+ extTemp +"\r\n");
+                repRapScreen.setExtruderTemperatureRequest(extTemp);
             } else {
-                sendCommand("M140 S"+ temperatureTextBox.getString() +"\r\n");
+                int bedTemp = Integer.parseInt(temperatureTextBox.getString());
+                sendCommand("M140 S"+ bedTemp +"\r\n");
+                repRapScreen.setBedTemperatureRequest(bedTemp);
             }
         }
         Display.getDisplay(parent).setCurrent(repRapScreen);

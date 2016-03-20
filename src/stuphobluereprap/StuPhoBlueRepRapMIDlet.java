@@ -33,28 +33,28 @@ public final class StuPhoBlueRepRapMIDlet extends MIDlet implements CommandListe
 ;
 
 //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
-    private java.util.Hashtable __previousDisplayables = new java.util.Hashtable();
-    private Command continueCommand;
+private java.util.Hashtable __previousDisplayables = new java.util.Hashtable();
     private Command exitCommand;
     private Command newSearchCommand;
     private Command connectCommand;
     private Command screenCommand1;
     private Command chooseAnotherCommand;
+    private Command continueCommand;
     private Command consoleScreenCommand;
     private Command printerScreenCommand;
     private Command composeScreenCommand;
     private Command okCommand;
     private Command cancelCommand;
-    private Command continueCommand1;
-    private Command backCommand;
-    private Command printCommand;
     private Command backCommand1;
-    private Alert alert2;
+    private Command printCommand;
+    private Command backCommand;
+    private Command continueCommand1;
     private List deviceList;
     private WaitScreen DeviceDiscoveryWaitScreen;
     private Alert DiscoveryFailedAlert;
     private WaitScreen connectWaitScreen;
     private Alert connectionFailedAlert;
+    private Alert alert2;
     private ConsoleScreen consoleScreen;
     private RepRapScreen repRapScreen;
     private TextBox composeTextBox;
