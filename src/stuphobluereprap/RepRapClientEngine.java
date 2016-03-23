@@ -31,9 +31,12 @@ public class RepRapClientEngine implements RepRapListener, PropertyChangeListene
     private ConsoleScreen consoleScreen;
     private BTSerialPort serialPort;
     private boolean expectSDfilelist = false;
+    private boolean expectTemperatureAnswer = false;
     private boolean haveSDfilelist = false;
     private boolean extruderTemperature;
     private String cmd = "";
+    private boolean hideExpectedTemperatureAnswers = true;
+    private boolean convertFilenamesToLowercase = true;
 
     public RepRapClientEngine() {
         temperatureTextBox = new TextBox("Temperature", null, 3, TextField.NUMERIC);                                      
@@ -101,6 +104,7 @@ public class RepRapClientEngine implements RepRapListener, PropertyChangeListene
             
             char c = (char) newValue;
             if ((c=='\n' || c=='\r') && cmd.length() > 0) {
+                boolean writeCommandToConsole = true;
                 int Tpos = cmd.indexOf("T:");
                 int Bpos = cmd.indexOf("B:");
                 //System.out.println("Tpos = " + Tpos + "; Bpos = " + Bpos);
@@ -119,6 +123,13 @@ public class RepRapClientEngine implements RepRapListener, PropertyChangeListene
                     if (repRapScreen!= null) {
                         repRapScreen.addTemp(new int[] {Ttemp}, new int[] {Btemp});                        
                     }
+                    
+                    if (expectTemperatureAnswer) {
+                        expectTemperatureAnswer = false;
+                        if (hideExpectedTemperatureAnswers) {
+                            writeCommandToConsole = false;
+                        }
+                    }
                 }
                 
                 if (expectSDfilelist) {
@@ -134,6 +145,9 @@ public class RepRapClientEngine implements RepRapListener, PropertyChangeListene
                     haveSDfilelist = false;
                 }
                 
+                if (writeCommandToConsole && consoleScreen!=null) {
+                    consoleScreen.write(cmd + "\n");
+                }
                 cmd = "";
             } else {
                 cmd += c;
@@ -165,7 +179,7 @@ public class RepRapClientEngine implements RepRapListener, PropertyChangeListene
             if (serialPort != null) {
                 serialPort.write(command);
             }
-            if (consoleScreen != null) {
+            if (consoleScreen != null && (!command.startsWith("M105") || !hideExpectedTemperatureAnswers)) {
                 consoleScreen.write(command);
             }            
         } catch (IOException ex) {
@@ -192,10 +206,23 @@ public class RepRapClientEngine implements RepRapListener, PropertyChangeListene
         Display.getDisplay(parent).setCurrent(repRapScreen);
     }
 
+    public void setHideExpectedTemperatureAnswers(boolean hideExpectedTemperatureAnswers) {
+        this.hideExpectedTemperatureAnswers = hideExpectedTemperatureAnswers;
+    }
+
+    public void setConvertFilenamesToLowercase(boolean convertFilenamesToLowercase) {
+        this.convertFilenamesToLowercase = convertFilenamesToLowercase;
+    }
+
+    public boolean getConvertFilenamesToLowercase() {
+        return convertFilenamesToLowercase;
+    }
+
     public void run() {
         while (true) {
             try {
                 sendCommand("M105"+"\r\n");
+                expectTemperatureAnswer = true;
                 Thread.sleep(2000);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();

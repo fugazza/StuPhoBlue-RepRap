@@ -30,6 +30,10 @@ public final class StuPhoBlueRepRapMIDlet extends MIDlet implements CommandListe
     private final BTSerialPort bluetoothSerialPort = new BTSerialPort();
     private Displayable lastScreen;
     private final RepRapClientEngine repRapEngine = new RepRapClientEngine();
+    /**
+     * list of discovered bluetooth devices
+     */
+    private Vector bluetoothDevices;
 ;
 
 //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
@@ -49,6 +53,8 @@ private java.util.Hashtable __previousDisplayables = new java.util.Hashtable();
     private Command printCommand;
     private Command backCommand;
     private Command continueCommand1;
+    private Command settingsScreenCommand;
+    private Command saveSettingsCommand;
     private List deviceList;
     private WaitScreen DeviceDiscoveryWaitScreen;
     private Alert DiscoveryFailedAlert;
@@ -60,6 +66,8 @@ private java.util.Hashtable __previousDisplayables = new java.util.Hashtable();
     private TextBox composeTextBox;
     private Alert sendFailedAlert;
     private List filesOnSDcardList;
+    private Form settingsForm;
+    private ChoiceGroup choiceGroup;
     private Image image1;
     private Image image2;
     private SimpleCancellableTask deviceDiscoveryTask;
@@ -191,119 +199,138 @@ switchDisplayable(null, getDeviceList());//GEN-LINE:|7-commandAction|4|73-postAc
                 // write pre-action user code here
 switchDisplayable(null, getDeviceDiscoveryWaitScreen());//GEN-LINE:|7-commandAction|6|197-postAction
                 // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|7|193-preAction
+} else if (command == exitCommand) {//GEN-LINE:|7-commandAction|7|245-preAction
+                // write pre-action user code here
+exitMIDlet();//GEN-LINE:|7-commandAction|8|245-postAction
+                // write post-action user code here
+}//GEN-BEGIN:|7-commandAction|9|193-preAction
         } else if (displayable == alert2) {
-            if (command == chooseAnotherCommand) {//GEN-END:|7-commandAction|7|193-preAction
+            if (command == chooseAnotherCommand) {//GEN-END:|7-commandAction|9|193-preAction
                 // write pre-action user code here
-switchDisplayable(null, getDeviceDiscoveryWaitScreen());//GEN-LINE:|7-commandAction|8|193-postAction
+switchDisplayable(null, getDeviceDiscoveryWaitScreen());//GEN-LINE:|7-commandAction|10|193-postAction
                 // write post-action user code here
-} else if (command == continueCommand) {//GEN-LINE:|7-commandAction|9|159-preAction
+} else if (command == continueCommand) {//GEN-LINE:|7-commandAction|11|159-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|10|159-postAction
+//GEN-LINE:|7-commandAction|12|159-postAction
                 // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|11|210-preAction
+}//GEN-BEGIN:|7-commandAction|13|210-preAction
         } else if (displayable == composeTextBox) {
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|11|210-preAction
+            if (command == cancelCommand) {//GEN-END:|7-commandAction|13|210-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|12|210-postAction
+//GEN-LINE:|7-commandAction|14|210-postAction
                 // write post-action user code here
-} else if (command == okCommand) {//GEN-LINE:|7-commandAction|13|208-preAction
+} else if (command == okCommand) {//GEN-LINE:|7-commandAction|15|208-preAction
                 // write pre-action user code here
-sendMethod();//GEN-LINE:|7-commandAction|14|208-postAction
+sendMethod();//GEN-LINE:|7-commandAction|16|208-postAction
                 // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|15|118-preAction
+}//GEN-BEGIN:|7-commandAction|17|118-preAction
         } else if (displayable == connectWaitScreen) {
-            if (command == WaitScreen.FAILURE_COMMAND) {//GEN-END:|7-commandAction|15|118-preAction
+            if (command == WaitScreen.FAILURE_COMMAND) {//GEN-END:|7-commandAction|17|118-preAction
                 // write pre-action user code here
-switchDisplayable(getConnectionFailedAlert(), getConnectWaitScreen());//GEN-LINE:|7-commandAction|16|118-postAction
+switchDisplayable(getConnectionFailedAlert(), getConnectWaitScreen());//GEN-LINE:|7-commandAction|18|118-postAction
  // write post-action user code here
-} else if (command == WaitScreen.SUCCESS_COMMAND) {//GEN-LINE:|7-commandAction|17|117-preAction
+} else if (command == WaitScreen.SUCCESS_COMMAND) {//GEN-LINE:|7-commandAction|19|117-preAction
  // write pre-action user code here
-startBluetoothSerialMethod();//GEN-LINE:|7-commandAction|18|117-postAction
+startBluetoothSerialMethod();//GEN-LINE:|7-commandAction|20|117-postAction
  // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|19|125-preAction
+}//GEN-BEGIN:|7-commandAction|21|125-preAction
         } else if (displayable == connectionFailedAlert) {
-            if (command == chooseAnotherCommand) {//GEN-END:|7-commandAction|19|125-preAction
+            if (command == chooseAnotherCommand) {//GEN-END:|7-commandAction|21|125-preAction
                 // write pre-action user code here
-switchDisplayable(null, getDeviceDiscoveryWaitScreen());//GEN-LINE:|7-commandAction|20|125-postAction
+switchDisplayable(null, getDeviceDiscoveryWaitScreen());//GEN-LINE:|7-commandAction|22|125-postAction
                 // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|21|205-preAction
+}//GEN-BEGIN:|7-commandAction|23|205-preAction
         } else if (displayable == consoleScreen) {
-            if (command == composeScreenCommand) {//GEN-END:|7-commandAction|21|205-preAction
+            if (command == composeScreenCommand) {//GEN-END:|7-commandAction|23|205-preAction
                 // write pre-action user code here
-switchDisplayable(null, getComposeTextBox());//GEN-LINE:|7-commandAction|22|205-postAction
+switchDisplayable(null, getComposeTextBox());//GEN-LINE:|7-commandAction|24|205-postAction
                 // write post-action user code here
-} else if (command == exitCommand) {//GEN-LINE:|7-commandAction|23|201-preAction
+} else if (command == exitCommand) {//GEN-LINE:|7-commandAction|25|201-preAction
                 // write pre-action user code here
-exitMIDlet();//GEN-LINE:|7-commandAction|24|201-postAction
+exitMIDlet();//GEN-LINE:|7-commandAction|26|201-postAction
                 // write post-action user code here
-} else if (command == printerScreenCommand) {//GEN-LINE:|7-commandAction|25|191-preAction
+} else if (command == printerScreenCommand) {//GEN-LINE:|7-commandAction|27|191-preAction
                 // write pre-action user code here
-switchDisplayable(null, getRepRapScreen());//GEN-LINE:|7-commandAction|26|191-postAction
+switchDisplayable(null, getRepRapScreen());//GEN-LINE:|7-commandAction|28|191-postAction
                 // write post-action user code here
                 lastScreen = repRapScreen;
-            }//GEN-BEGIN:|7-commandAction|27|58-preAction
+            }//GEN-BEGIN:|7-commandAction|29|58-preAction
         } else if (displayable == deviceList) {
-            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|27|58-preAction
+            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|29|58-preAction
                 // write pre-action user code here
-deviceListAction();//GEN-LINE:|7-commandAction|28|58-postAction
+deviceListAction();//GEN-LINE:|7-commandAction|30|58-postAction
                 // write post-action user code here
-} else if (command == chooseAnotherCommand) {//GEN-LINE:|7-commandAction|29|195-preAction
+} else if (command == chooseAnotherCommand) {//GEN-LINE:|7-commandAction|31|195-preAction
                 // write pre-action user code here
-switchDisplayable(null, getDeviceDiscoveryWaitScreen());//GEN-LINE:|7-commandAction|30|195-postAction
+switchDisplayable(null, getDeviceDiscoveryWaitScreen());//GEN-LINE:|7-commandAction|32|195-postAction
                 // write post-action user code here
-} else if (command == connectCommand) {//GEN-LINE:|7-commandAction|31|110-preAction
+} else if (command == connectCommand) {//GEN-LINE:|7-commandAction|33|110-preAction
                 // write pre-action user code here
-switchDisplayable(null, getConnectWaitScreen());//GEN-LINE:|7-commandAction|32|110-postAction
+switchDisplayable(null, getConnectWaitScreen());//GEN-LINE:|7-commandAction|34|110-postAction
                 // write post-action user code here
-} else if (command == exitCommand) {//GEN-LINE:|7-commandAction|33|62-preAction
+} else if (command == exitCommand) {//GEN-LINE:|7-commandAction|35|62-preAction
                 // write pre-action user code here
-exitMIDlet();//GEN-LINE:|7-commandAction|34|62-postAction
+exitMIDlet();//GEN-LINE:|7-commandAction|36|62-postAction
                 // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|35|232-preAction
+}//GEN-BEGIN:|7-commandAction|37|232-preAction
         } else if (displayable == filesOnSDcardList) {
-            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|35|232-preAction
+            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|37|232-preAction
                 // write pre-action user code here
-filesOnSDcardListAction();//GEN-LINE:|7-commandAction|36|232-postAction
+filesOnSDcardListAction();//GEN-LINE:|7-commandAction|38|232-postAction
                 // write post-action user code here
-} else if (command == backCommand) {//GEN-LINE:|7-commandAction|37|238-preAction
+} else if (command == backCommand) {//GEN-LINE:|7-commandAction|39|238-preAction
                 // write pre-action user code here
-switchToPreviousDisplayable();//GEN-LINE:|7-commandAction|38|238-postAction
+switchDisplayable(null, getRepRapScreen());//GEN-LINE:|7-commandAction|40|238-postAction
                 // write post-action user code here
-} else if (command == printCommand) {//GEN-LINE:|7-commandAction|39|235-preAction
+} else if (command == printCommand) {//GEN-LINE:|7-commandAction|41|235-preAction
                 // write pre-action user code here
-printFileMethod();//GEN-LINE:|7-commandAction|40|235-postAction
+printFileMethod();//GEN-LINE:|7-commandAction|42|235-postAction
                 // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|41|211-preAction
+}//GEN-BEGIN:|7-commandAction|43|211-preAction
         } else if (displayable == repRapScreen) {
-            if (command == composeScreenCommand) {//GEN-END:|7-commandAction|41|211-preAction
+            if (command == composeScreenCommand) {//GEN-END:|7-commandAction|43|211-preAction
  // write pre-action user code here
-switchDisplayable(null, getComposeTextBox());//GEN-LINE:|7-commandAction|42|211-postAction
+switchDisplayable(null, getComposeTextBox());//GEN-LINE:|7-commandAction|44|211-postAction
  // write post-action user code here
-} else if (command == consoleScreenCommand) {//GEN-LINE:|7-commandAction|43|188-preAction
+} else if (command == consoleScreenCommand) {//GEN-LINE:|7-commandAction|45|188-preAction
  // write pre-action user code here
-switchDisplayable(null, getConsoleScreen());//GEN-LINE:|7-commandAction|44|188-postAction
+switchDisplayable(null, getConsoleScreen());//GEN-LINE:|7-commandAction|46|188-postAction
  // write post-action user code here
  lastScreen = consoleScreen;
-            } else if (command == exitCommand) {//GEN-LINE:|7-commandAction|45|199-preAction
+            } else if (command == exitCommand) {//GEN-LINE:|7-commandAction|47|199-preAction
  // write pre-action user code here
-exitMIDlet();//GEN-LINE:|7-commandAction|46|199-postAction
+exitMIDlet();//GEN-LINE:|7-commandAction|48|199-postAction
  // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|47|228-preAction
+} else if (command == settingsScreenCommand) {//GEN-LINE:|7-commandAction|49|249-preAction
+                // write pre-action user code here
+switchDisplayable(null, getSettingsForm());//GEN-LINE:|7-commandAction|50|249-postAction
+                // write post-action user code here
+}//GEN-BEGIN:|7-commandAction|51|228-preAction
         } else if (displayable == sendFailedAlert) {
-            if (command == backCommand) {//GEN-END:|7-commandAction|47|228-preAction
+            if (command == backCommand) {//GEN-END:|7-commandAction|51|228-preAction
                 // write pre-action user code here
-switchToPreviousDisplayable();//GEN-LINE:|7-commandAction|48|228-postAction
+switchToPreviousDisplayable();//GEN-LINE:|7-commandAction|52|228-postAction
                 // write post-action user code here
-} else if (command == continueCommand1) {//GEN-LINE:|7-commandAction|49|226-preAction
+} else if (command == continueCommand1) {//GEN-LINE:|7-commandAction|53|226-preAction
                 // write pre-action user code here
-returnToScreenMethod();//GEN-LINE:|7-commandAction|50|226-postAction
+returnToScreenMethod();//GEN-LINE:|7-commandAction|54|226-postAction
                 // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|51|7-postCommandAction
-        }//GEN-END:|7-commandAction|51|7-postCommandAction
+}//GEN-BEGIN:|7-commandAction|55|251-preAction
+        } else if (displayable == settingsForm) {
+            if (command == backCommand) {//GEN-END:|7-commandAction|55|251-preAction
+ // write pre-action user code here
+switchToPreviousDisplayable();//GEN-LINE:|7-commandAction|56|251-postAction
+ // write post-action user code here
+} else if (command == saveSettingsCommand) {//GEN-LINE:|7-commandAction|57|253-preAction
+ // write pre-action user code here
+saveSettingsMethod();//GEN-LINE:|7-commandAction|58|253-postAction
+ // write post-action user code here
+}//GEN-BEGIN:|7-commandAction|59|7-postCommandAction
+        }//GEN-END:|7-commandAction|59|7-postCommandAction
         // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|52|
-//</editor-fold>//GEN-END:|7-commandAction|52|
+}//GEN-BEGIN:|7-commandAction|60|253-postAction
+//</editor-fold>//GEN-END:|7-commandAction|60|253-postAction
+
 
 
 
@@ -343,7 +370,7 @@ deviceList = new List("Bluetooth devices", Choice.IMPLICIT);//GEN-BEGIN:|57-gett
             deviceList.addCommand(getExitCommand());
             deviceList.addCommand(getChooseAnotherCommand());
             deviceList.setCommandListener(this);
-            deviceList.setSelectCommand(null);
+            deviceList.setSelectCommand(getConnectCommand());
             deviceList.setSelectedFlags(new boolean[]{});//GEN-END:|57-getter|1|57-postInit
  // write post-init user code here
 }//GEN-BEGIN:|57-getter|2|
@@ -397,7 +424,7 @@ DeviceDiscoveryWaitScreen = new WaitScreen(getDisplay());//GEN-BEGIN:|70-getter|
             DeviceDiscoveryWaitScreen.setTitle("Bluetooth search");
             DeviceDiscoveryWaitScreen.setCommandListener(this);
             DeviceDiscoveryWaitScreen.setImage(getImage2());
-            DeviceDiscoveryWaitScreen.setText("Searching for bluetooth devices");
+            DeviceDiscoveryWaitScreen.setText("Searching bluetooth");
             DeviceDiscoveryWaitScreen.setTask(getDeviceDiscoveryTask());//GEN-END:|70-getter|1|70-postInit
  // write post-init user code here
 }//GEN-BEGIN:|70-getter|2|
@@ -417,6 +444,7 @@ DeviceDiscoveryWaitScreen = new WaitScreen(getDisplay());//GEN-BEGIN:|70-getter|
  // write pre-init user code here
 DiscoveryFailedAlert = new Alert("No device found", "No bluetooth device was found", getImage1(), AlertType.ERROR);//GEN-BEGIN:|76-getter|1|76-postInit
             DiscoveryFailedAlert.addCommand(getChooseAnotherCommand());
+            DiscoveryFailedAlert.addCommand(getExitCommand());
             DiscoveryFailedAlert.setCommandListener(this);
             DiscoveryFailedAlert.setTimeout(Alert.FOREVER);//GEN-END:|76-getter|1|76-postInit
  // write post-init user code here
@@ -551,7 +579,7 @@ connectWaitScreen = new WaitScreen(getDisplay());//GEN-BEGIN:|116-getter|1|116-p
             connectWaitScreen.setTitle("Connecting...");
             connectWaitScreen.setCommandListener(this);
             connectWaitScreen.setImage(getImage1());
-            connectWaitScreen.setText("Connecting to selected bluetooth device");
+            connectWaitScreen.setText("Connecting to bluetooth");
             connectWaitScreen.setTask(getBluetoothConnectionTask());//GEN-END:|116-getter|1|116-postInit
  // write post-init user code here
 }//GEN-BEGIN:|116-getter|2|
@@ -749,8 +777,9 @@ alert2 = new Alert("Tiskarna nedpovida", "Tiskarna se nehlasi korektne", null, n
  // write pre-init user code here
              repRapScreen = new RepRapScreen(getDisplay());
             repRapScreen.addCommand(getConsoleScreenCommand());
-            repRapScreen.addCommand(getExitCommand());
+            repRapScreen.addCommand(getSettingsScreenCommand());
             repRapScreen.addCommand(getComposeScreenCommand());
+            repRapScreen.addCommand(getExitCommand());
             repRapScreen.setCommandListener(this);
 //GEN-LINE:|185-getter|1|185-postInit
  // write post-init user code here
@@ -974,11 +1003,22 @@ sendFailedAlert = new Alert("alert");//GEN-BEGIN:|222-getter|1|222-postInit
     public void printFileMethod() {
 //GEN-END:|240-entry|0|241-preAction
  // write pre-action user code here
-    String textToSend = "M23 " + filesOnSDcardList.getString(filesOnSDcardList.getSelectedIndex()) + "\r\n"
-            + "M24" + "\r\n";
+    String filename = filesOnSDcardList.getString(filesOnSDcardList.getSelectedIndex());
+    if (repRapEngine.getConvertFilenamesToLowercase()) {
+        filename = filename.toLowerCase();
+    }
+    String textToSend1 = "M23 " + filename + "\r\n";
+    String textToSend2 = "M24" + "\r\n";
     try {
-        bluetoothSerialPort.write(textToSend);
-        consoleScreen.write(textToSend);
+        consoleScreen.write(textToSend1);
+        bluetoothSerialPort.write(textToSend1);
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        consoleScreen.write(textToSend2);
+        bluetoothSerialPort.write(textToSend2);
     } catch (IOException ex) {
         ex.printStackTrace();
     }
@@ -1035,7 +1075,8 @@ backCommand1 = new Command("Back", Command.BACK, 0);//GEN-LINE:|236-getter|1|236
 filesOnSDcardList = new List("list", Choice.IMPLICIT);//GEN-BEGIN:|231-getter|1|231-postInit
             filesOnSDcardList.addCommand(getPrintCommand());
             filesOnSDcardList.addCommand(getBackCommand());
-            filesOnSDcardList.setCommandListener(this);//GEN-END:|231-getter|1|231-postInit
+            filesOnSDcardList.setCommandListener(this);
+            filesOnSDcardList.setSelectCommand(getPrintCommand());//GEN-END:|231-getter|1|231-postInit
  // write post-init user code here
 }//GEN-BEGIN:|231-getter|2|
         return filesOnSDcardList;
@@ -1054,6 +1095,94 @@ String __selectedString = getFilesOnSDcardList().getString(getFilesOnSDcardList(
  // enter post-action user code here
 }//GEN-BEGIN:|231-action|2|
 //</editor-fold>//GEN-END:|231-action|2|
+
+//<editor-fold defaultstate="collapsed" desc=" Generated Method: saveSettingsMethod ">//GEN-BEGIN:|255-entry|0|256-preAction
+    /**
+     * Performs an action assigned to the saveSettingsMethod entry-point.
+     */
+    public void saveSettingsMethod() {
+//GEN-END:|255-entry|0|256-preAction
+ // write pre-action user code here
+ repRapEngine.setConvertFilenamesToLowercase(choiceGroup.isSelected(0));
+ repRapEngine.setHideExpectedTemperatureAnswers(choiceGroup.isSelected(1));
+        switchDisplayable(null, getRepRapScreen());//GEN-LINE:|255-entry|1|256-postAction
+ // write post-action user code here
+}//GEN-BEGIN:|255-entry|2|
+//</editor-fold>//GEN-END:|255-entry|2|
+
+//<editor-fold defaultstate="collapsed" desc=" Generated Getter: settingsScreenCommand ">//GEN-BEGIN:|248-getter|0|248-preInit
+    /**
+     * Returns an initialized instance of settingsScreenCommand component.
+     *
+     * @return the initialized component instance
+     */
+    public Command getSettingsScreenCommand() {
+        if (settingsScreenCommand == null) {
+//GEN-END:|248-getter|0|248-preInit
+ // write pre-init user code here
+settingsScreenCommand = new Command("Settings", Command.SCREEN, 0);//GEN-LINE:|248-getter|1|248-postInit
+ // write post-init user code here
+}//GEN-BEGIN:|248-getter|2|
+        return settingsScreenCommand;
+    }
+//</editor-fold>//GEN-END:|248-getter|2|
+
+//<editor-fold defaultstate="collapsed" desc=" Generated Getter: saveSettingsCommand ">//GEN-BEGIN:|252-getter|0|252-preInit
+    /**
+     * Returns an initialized instance of saveSettingsCommand component.
+     *
+     * @return the initialized component instance
+     */
+    public Command getSaveSettingsCommand() {
+        if (saveSettingsCommand == null) {
+//GEN-END:|252-getter|0|252-preInit
+ // write pre-init user code here
+saveSettingsCommand = new Command("Save", Command.OK, 0);//GEN-LINE:|252-getter|1|252-postInit
+ // write post-init user code here
+}//GEN-BEGIN:|252-getter|2|
+        return saveSettingsCommand;
+    }
+//</editor-fold>//GEN-END:|252-getter|2|
+
+//<editor-fold defaultstate="collapsed" desc=" Generated Getter: settingsForm ">//GEN-BEGIN:|247-getter|0|247-preInit
+    /**
+     * Returns an initialized instance of settingsForm component.
+     *
+     * @return the initialized component instance
+     */
+    public Form getSettingsForm() {
+        if (settingsForm == null) {
+//GEN-END:|247-getter|0|247-preInit
+ // write pre-init user code here
+settingsForm = new Form("Settings", new Item[]{getChoiceGroup()});//GEN-BEGIN:|247-getter|1|247-postInit
+            settingsForm.addCommand(getBackCommand());
+            settingsForm.addCommand(getSaveSettingsCommand());
+            settingsForm.setCommandListener(this);//GEN-END:|247-getter|1|247-postInit
+ // write post-init user code here
+}//GEN-BEGIN:|247-getter|2|
+        return settingsForm;
+    }
+//</editor-fold>//GEN-END:|247-getter|2|
+
+//<editor-fold defaultstate="collapsed" desc=" Generated Getter: choiceGroup ">//GEN-BEGIN:|259-getter|0|259-preInit
+    /**
+     * Returns an initialized instance of choiceGroup component.
+     *
+     * @return the initialized component instance
+     */
+    public ChoiceGroup getChoiceGroup() {
+        if (choiceGroup == null) {
+//GEN-END:|259-getter|0|259-preInit
+ // write pre-init user code here
+choiceGroup = new ChoiceGroup("Printer setup", Choice.MULTIPLE);//GEN-BEGIN:|259-getter|1|259-postInit
+            choiceGroup.append("filenames to lower case", null);
+            choiceGroup.append("display temperature answers", null);
+            choiceGroup.setSelectedFlags(new boolean[]{true, true});//GEN-END:|259-getter|1|259-postInit
+ // write post-init user code here
+}//GEN-BEGIN:|259-getter|2|
+        return choiceGroup;
+    }
+//</editor-fold>//GEN-END:|259-getter|2|
 
 
 
@@ -1112,17 +1241,18 @@ String __selectedString = getFilesOnSDcardList().getString(getFilesOnSDcardList(
     }
     
     private void searchForBluetooth() throws NoBluetoothFoundException, IOException {
-        Vector devices = BTSerialPort.discoverDevices();
+        bluetoothDevices = BTSerialPort.discoverDevices();
         
-        if (devices != null && devices.size() > 0) {
-            int deviceCount = devices.size();
+        if (bluetoothDevices != null && bluetoothDevices.size() > 0) {
+            int deviceCount = bluetoothDevices.size();
             System.out.println("Count of bluetooth devices found: " + deviceCount);
             List devList = getDeviceList();
             devList.deleteAll();
             for (int i = 0; i < deviceCount; i++) {
                 try {
-                RemoteDevice remoteDevice = (RemoteDevice) devices.elementAt(i);
-                devList.append(remoteDevice.getBluetoothAddress(), null);
+                RemoteDevice remoteDevice = (RemoteDevice) bluetoothDevices.elementAt(i);
+                //devList.append(remoteDevice.getBluetoothAddress(), null);
+                devList.append(remoteDevice.getFriendlyName(true), null);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -1133,7 +1263,8 @@ String __selectedString = getFilesOnSDcardList().getString(getFilesOnSDcardList(
     }
     
     private void connectToSelectedBluetoothDevice() throws IOException {        
-        String MAC = deviceList.getString(deviceList.getSelectedIndex());
+        int selectedItem = deviceList.getSelectedIndex();
+        String MAC = ((RemoteDevice) bluetoothDevices.elementAt(selectedItem)).getBluetoothAddress();
         bluetoothSerialPort.Connect(MAC);
     }
 
@@ -1141,8 +1272,8 @@ String __selectedString = getFilesOnSDcardList().getString(getFilesOnSDcardList(
         //System.out.println(propertyName);
         if (propertyName.compareTo("character read") == 0) {
             //System.out.println("char received: " + (char) newValue);
-            ConsoleScreen c = getConsoleScreen();
-            c.writeChar((char) newValue);
+            //ConsoleScreen c = getConsoleScreen();
+            //c.writeChar((char) newValue);
         } else if (propertyName.compareTo("disconnected") == 0) {
             //disconnectMethod();
         }
